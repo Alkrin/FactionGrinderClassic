@@ -1,0 +1,730 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+    <Script file="FactionGrinderClassic.lua"/>
+
+    <GameTooltip name="FGCToolTip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+
+    <Button name="FGC_QuestButton" virtual="true" hidden="false">
+        <Size><AbsDimension x="32" y="32"/></Size>
+
+        <Scripts>
+            <OnShow>
+                self:SetFrameLevel( (self:GetParent()):GetFrameLevel() + 1 )
+            </OnShow>
+            <OnClick>
+                FGC_QuestButtonClick(self)
+            </OnClick>
+            <OnLeave>
+                FGC_HideToolTip()
+            </OnLeave>
+            <OnEnter>
+                FGC_ShowToolTip(self)
+            </OnEnter>
+        </Scripts>
+    </Button>
+
+    <CheckButton name="FGC_CategoryCheckButton" inherits="UICheckButtonTemplate" virtual="true" checked="false">
+        <Size><AbsDimension x="20" y="20" /></Size>
+        <Scripts>
+            <OnClick>
+                local _,_,category = string.find(self:GetName(),"FGC_(.*)CategoryCheckbox")
+                FGC_OnCategoryCheckButtonClicked(category,self:GetChecked())
+            </OnClick>
+        </Scripts>
+    </CheckButton>
+
+    <CheckButton name="FGC_TurnInTrackerCheckButton" inherits="UICheckButtonTemplate" virtual="true" checked="false">
+        <Size><AbsDimension x="20" y="20" /></Size>
+        <Scripts>
+            <OnClick>
+                local _,_,category = string.find(self:GetName(),"FGC_(.*)TurnInTrackerCheckbox")
+                FGC_OnTurnInTrackerCheckButtonClicked(category,self:GetChecked())
+            </OnClick>
+        </Scripts>
+    </CheckButton>
+
+    <CheckButton name="FGC_GrindStatsTrackerCheckButton" inherits="UICheckButtonTemplate" virtual="true" checked="false">
+        <Size><AbsDimension x="20" y="20" /></Size>
+        <Scripts>
+            <OnClick>
+                local _,_,category = string.find(self:GetName(),"FGC_(.*)GrindStatsTrackerCheckbox")
+                FGC_OnGrindStatsTrackerCheckButtonClicked(category,self:GetChecked())
+            </OnClick>
+        </Scripts>
+    </CheckButton>
+
+    <Frame name="FGC_TrackerFrame" hidden="true" virtual="true" movable="true">
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <TileSize><AbsValue val="32"/></TileSize>
+            <EdgeSize><AbsValue val="32"/></EdgeSize>
+            <BackgroundInsets>
+                <AbsInset left="11" right="12" top="12" bottom="11"/>
+            </BackgroundInsets>
+        </Backdrop>
+
+        <Scripts>
+            <OnMouseDown> self:StartMoving();  </OnMouseDown>
+            <OnMouseUp>   self:StopMovingOrSizing(); FGC_RecordFramePosition(self);</OnMouseUp>
+            <OnDragStop>  self:StopMovingOrSizing(); </OnDragStop>
+        </Scripts> 
+    </Frame>
+
+    <Frame name="FGC_CategoriesScrollChild" hidden="false" virtual="false" movable="true" parent="UIParent">
+        <Size><AbsDimension x="162" y="500"/></Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset><AbsDimension x="0" y="0"/></Offset>
+            </Anchor>
+        </Anchors>
+
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parent_Background" setAllPoints="true">
+                    <Color r="0" g="0" b="0" a="1" />
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="FGC_FactionsScrollChild" hidden="false" virtual="false" movable="true" parent="UIParent">
+        <Size><AbsDimension x="300" y="500"/></Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset><AbsDimension x="0" y="0"/></Offset>
+            </Anchor>
+        </Anchors>
+
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parent_Background" setAllPoints="true">
+                    <Color r="0" g="0" b="0" a="1" />
+                </Texture>
+            </Layer>
+
+            <Layer level="OVERLAY">
+                <FontString name="FGC_TurninLabel" inherits="GameFontGreenSmall" text="Turn-ins">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset><AbsDimension x="-120" y="-3"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="FGC_GrindStatsLabel" inherits="GameFontGreenSmall" text="Grind Stats">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset><AbsDimension x="-60" y="-3"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <!--This is the frame containing all the settings-->
+    <Frame name="FGC_SettingsFrame" >
+        <Scripts>
+            <OnLoad function="FGC_OnLoad" />
+            <OnEvent function="FGC_OnEvent" />
+            <OnUpdate function="FGC_UpdateGrindingStats" />
+            <OnMouseDown> self:StartMoving();  </OnMouseDown>
+            <OnMouseUp>   self:StopMovingOrSizing(); </OnMouseUp>
+            <OnDragStop>  self:StopMovingOrSizing(); </OnDragStop>
+        </Scripts> 
+
+        <Frames>
+            <Frame name="FGC_GeneralSettingsFrame" hidden="false" virtual="false" movable="true" parent="FGC_SettingsFrame">
+                <Size><AbsDimension x="200" y="105"/></Size>
+
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                        <Offset><AbsDimension x="5" y="-6"/></Offset>
+                    </Anchor>
+                </Anchors>
+
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+                    <TileSize><AbsValue val="16"/></TileSize>
+                    <EdgeSize><AbsValue val="16"/></EdgeSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="6" top="6" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture name="FGC_BG3">
+                            <Size><AbsDimension x="190" y="95"/></Size>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                            <Color r="0.2" g="0.2" b="0.2" a="1" />
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="OVERLAY">
+                        <FontString name="FGC_GeneralSettingsHeader" inherits="GameFontWhite" text="General Settings">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset><AbsDimension x="0" y="-14"/></Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+
+                <Frames>
+                    <CheckButton name="FGC_CB_IncludeBankBags" inherits="UICheckButtonTemplate" checked="false">
+                        <Size><AbsDimension x="20" y="20" /></Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset><AbsDimension x="15" y="-33"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                _G[self:GetName().."Text"]:SetText(FGC_TEXT:Get("Include Bank Bags"));
+                            </OnLoad>
+                            <OnClick>
+                                FGC_OnIncludeBankBagsClicked(self:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="FGC_CB_IncludeItemsOnAlts" inherits="UICheckButtonTemplate" checked="false">
+                        <Size><AbsDimension x="20" y="20" /></Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset><AbsDimension x="15" y="-53"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                _G[self:GetName().."Text"]:SetText(FGC_TEXT:Get("Include Items on Alts"));
+                            </OnLoad>
+                            <OnClick>
+                                FGC_OnIncludeItemsOnAltsClicked(self:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <Button name="FGC_BU_ResetWindowPositions" inherits="UIPanelButtonTemplate" text="Reset Window Positions">
+                        <Size><AbsDimension x="160" y="22"/></Size>
+                        <Anchors>
+                            <Anchor point="TOP">
+                                <Offset><AbsDimension x="0" y="-73"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                self:SetText(FGC_TEXT:Get("Reset Window Positions"));
+                            </OnLoad>
+                            <OnClick>
+                                FGC_OnResetWindowPositionsClicked()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+            </Frame>
+
+            <Frame name="FGC_CategoriesFrame" hidden="false" virtual="false" movable="true" parent="FGC_SettingsFrame">
+                <Size><AbsDimension x="200" /></Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="FGC_GeneralSettingsFrame">
+                        <Offset><AbsDimension x="0" y="0"/></Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOM">
+                        <Offset><AbsDimension y="5"/></Offset>
+                    </Anchor>
+                </Anchors>
+
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+                    <TileSize><AbsValue val="16"/></TileSize>
+                    <EdgeSize><AbsValue val="16"/></EdgeSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="6" top="6" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture>
+                            <Anchor point="TOPLEFT">
+                                <Offset><AbsDimension x="5" y="-5" /></Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset><AbsDimension x="-5" y="5" /></Offset>
+                            </Anchor>
+                            <Color r="0.2" g="0.2" b="0.2" a="1" />
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="OVERLAY">
+                        <FontString name="FGC_CategoriesHeader" inherits="GameFontWhite" text="Categories">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset><AbsDimension x="0" y="-14"/></Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+
+                <Frames>
+                    <ScrollFrame name="FGC_CategoriesScrollFrame" inherits="UIPanelScrollFrameTemplate" movable="true">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset><AbsDimension x="10" y="-36"/></Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOM">
+                                <Offset><AbsDimension y="10" /></Offset>
+                            </Anchor>
+                            <Anchor point="RIGHT">
+                                <Offset><AbsDimension x="-30" /></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                self:SetScrollChild("FGC_CategoriesScrollChild");
+                            </OnLoad>
+                        </Scripts>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture>
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT"/>
+                                        <Anchor point="BOTTOM"/>
+                                        <Anchor point="RIGHT" />
+                                    </Anchors>
+                                    <Color r="0" g="0" b="0" a="1" />
+                                </Texture>
+                                <Texture>
+                                    <Size><AbsDimension x="16"/></Size>
+                                    <Anchors>
+                                        <Anchor point="TOP">
+                                            <Offset><AbsDimension x="-5"/></Offset>
+                                        </Anchor>
+                                        <Anchor point="BOTTOM">
+                                            <Offset><AbsDimension y="2"/></Offset>
+                                        </Anchor>
+                                        <Anchor point="RIGHT">
+                                            <Offset><AbsDimension x="22"/></Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                    <Color r="0" g="0" b="0" a="1" />
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </ScrollFrame>
+                </Frames>
+            </Frame>
+
+            <Frame name="FGC_FactionsListFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="FGC_GeneralSettingsFrame" />
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeTo="FGC_CategoriesFrame" />
+                    <Anchor point="RIGHT">
+                        <Offset><AbsDimension x="-5" /></Offset>
+                    </Anchor>
+                </Anchors>
+
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+                    <TileSize><AbsValue val="16"/></TileSize>
+                    <EdgeSize><AbsValue val="16"/></EdgeSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="6" top="6" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset><AbsDimension x="5" y="-5" /></Offset>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT">
+                                    <Offset><AbsDimension x="-5" y="5" /></Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Color r="0.2" g="0.2" b="0.2" a="1" />
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="OVERLAY">
+                        <FontString name="FGC_FactionsHeader" inherits="GameFontWhite" text="Factions">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset><AbsDimension x="-20" y="-14"/></Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <ScrollFrame name="FGC_FactionsScrollFrame" inherits="UIPanelScrollFrameTemplate" movable="true">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset><AbsDimension x="10" y="-36"/></Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOM">
+                                <Offset><AbsDimension y="10" /></Offset>
+                            </Anchor>
+                            <Anchor point="RIGHT">
+                                <Offset><AbsDimension x="-30" /></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                self:SetScrollChild("FGC_FactionsScrollChild")
+                            </OnLoad>
+                        </Scripts>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture>
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT"/>
+                                        <Anchor point="BOTTOM"/>
+                                        <Anchor point="RIGHT" />
+                                    </Anchors>
+                                    <Color r="0" g="0" b="0" a="1" />
+                                </Texture>
+                                <Texture>
+                                    <Size><AbsDimension x="16"/></Size>
+                                    <Anchors>
+                                        <Anchor point="TOP">
+                                            <Offset><AbsDimension x="-5"/></Offset>
+                                        </Anchor>
+                                        <Anchor point="BOTTOM">
+                                            <Offset><AbsDimension y="2"/></Offset>
+                                        </Anchor>
+                                        <Anchor point="RIGHT">
+                                            <Offset><AbsDimension x="22"/></Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                    <Color r="0" g="0" b="0" a="1" />
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </ScrollFrame>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <!--This is the frame containing all the grinding statistics-->
+    <Frame name="FGC_GrindStatsTrackerFrame" hidden="true" virtual="true" movable="true" parent="UIParent">
+        <Size><AbsDimension x="200" y="260"/></Size>
+
+        <Anchors>
+            <Anchor point="LEFT">
+                <Offset><AbsDimension x="200" y="0"/></Offset>
+            </Anchor>
+        </Anchors>
+
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <TileSize><AbsValue val="32"/></TileSize>
+            <EdgeSize><AbsValue val="32"/></EdgeSize>
+            <BackgroundInsets>
+                <AbsInset left="11" right="12" top="12" bottom="11"/>
+            </BackgroundInsets>
+        </Backdrop>
+
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parent_RepLevel" inherits="GameFontNormalSmall" text="Now Neutral">
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" >
+                            <Offset><AbsDimension x="0" y="-181"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                    <Color r="255" g="255" b="0"/>
+                </FontString>
+
+                <FontString name="$parent_RepValue" inherits="GameFontNormalSmall" text="Rep Value : 0">
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" >
+                            <Offset><AbsDimension x="0" y="-195"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                    <Color r="255" g="255" b="0"/>
+                </FontString>
+
+                <FontString name="$parent_RepPercent" inherits="NumberFontNormalSmall" text = "|cff00ff000% |caaaaaaaa+ |cffffff000% |caaaaaaaa= |cff88ff000%">
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" >
+                            <Offset><AbsDimension x="0" y="-231"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture name="$parent_Texture" file="Interface\Icons\INV_Misc_Horn_01">
+                    <Size><AbsDimension x="16" y="16"/></Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset><AbsDimension x="13" y="-13"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="1" top="0" bottom="1"/>
+                </Texture>
+
+                <FontString name="$parent_CurrentlyGrinding" inherits="GameFontNormalSmall" text = "|cffff0000Not Grinding">
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" >
+                            <Offset><AbsDimension x="0" y="-40"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_Today" inherits="GameFontNormalSmall" text = "|cffffffffToday's Grinding">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="15" y="-55"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeToday" inherits="NumberFontNormalSmall" text = "|cffaaaaaaTime :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-68"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepToday" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-79"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepPerHourToday" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep/Hour :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-90"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeToRepUpToday" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep-up In :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-101"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeTodayVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa-----">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-68"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepTodayVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa0">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-79"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepPerHourTodayVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa0">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-90"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeToRepUpTodayVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa-----">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-101"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_Total" inherits="NumberFontNormalSmall" text = "|cffffffffTotal Grinding">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="15" y="-120"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeTotal" inherits="NumberFontNormalSmall" text = "|cffaaaaaaTime :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-133"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepTotal" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-144"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepPerHourTotal" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep/Hour :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-155"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeToRepUpTotal" inherits="NumberFontNormalSmall" text = "|cffaaaaaaRep-up In :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="23" y="-166"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeTotalVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa-----">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-133"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepTotalVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa0">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-144"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_RepPerHourTotalVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa0">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-155"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parent_TimeToRepUpTotalVal" inherits="NumberFontNormalSmall" text = "|cffaaaaaa-----">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+                            <Offset><AbsDimension x="93" y="-166"/></Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <Button name="$parent_BU_ToggleGrinding" inherits="UIPanelButtonTemplate" text="Start Grinding">
+                <Size><AbsDimension x="120" y="22"/></Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset><AbsDimension x="0" y="-15"/></Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        FGC_ToggleGrinding(self);
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parent_ToRepUpFrame" hidden="false" virtual="false" moveable="false" enableMouse="true">
+                <Size><AbsDimension x="110" y="20"/></Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset><AbsDimension x="20" y="-209"/></Offset>
+                    </Anchor>
+                </Anchors>
+
+                <Backdrop edgeFile="Interface\DialogFrame\UI-DialogBox-Border" bgFile="Interface\CharacterFrame\BarHighlight" tile="true">
+                    <EdgeSize><AbsValue val="16"/></EdgeSize>
+                    <TileSize><AbsValue val="16"/></TileSize>
+                    <BackgroundInsets><AbsInset left="5" right="5" top="5" bottom="5"/></BackgroundInsets>
+                </Backdrop>
+                <Frames>
+                    <StatusBar name="$parent_SB_ActualRep" drawLayer="OVERLAY" minValue="0" maxValue="100" defaultValue="75">
+                        <Size><AbsDimension x="100" y="10"/></Size>
+                        <Anchors>
+                            <Anchor point="CENTER">
+                                <Offset><AbsDimension x="0" y="0"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+                        <BarColor r="0" g="0.7" b="0.13"/>
+                        <Scripts>
+                            <OnLoad>self:SetMinMaxValues(0,100)</OnLoad>
+                        </Scripts>
+                    </StatusBar>
+
+                    <StatusBar name="$parent_SB_RepWithItems" drawLayer="ARTWORK" minValue="0" maxValue="100" defaultValue="50">
+                        <Size><AbsDimension x="100" y="10"/></Size>
+                        <Anchors>
+                            <Anchor point="CENTER">
+                                <Offset><AbsDimension x="0" y="0"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+                        <BarColor r="1" g="1" b="0"/>
+                        <Scripts>
+                            <OnLoad>self:SetMinMaxValues(0,100)</OnLoad>
+                        </Scripts>
+                    </StatusBar>
+
+                    <Frame name="$parent_ToRepUpOverlayFrame" hidden="false" virtual="false" moveable="false" enableMouse="true">
+                        <Size><AbsDimension x="100" y="20"/></Size>
+                        <Anchors>
+                            <Anchor point="CENTER">
+                                <Offset><AbsDimension x="0" y="0"/></Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnShow>
+                                self:SetFrameLevel( (self:GetParent()):GetFrameLevel() + 1 );
+                            </OnShow>
+                        </Scripts>
+                        <Layers>
+                            <Layer level="HIGHLIGHT">
+                                <FontString name="$parent_RepPoints" inherits="NumberFontNormalSmall" text="0/3000">
+                                    <Anchors>
+                                        <Anchor point="CENTER">
+                                            <Offset><AbsDimension x="0" y="0"/></Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                    <Color r="1" g="1" b="1"/>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                    </Frame>
+                </Frames>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parent_Abbreviation" inherits="GameFontNormalSmall" text="TH">
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset><AbsDimension x="-80" y="0"/></Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Color r="1" g="1" b="1"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames> 
+
+        <Scripts>
+            <OnMouseDown> self:StartMoving();  </OnMouseDown>
+            <OnMouseUp>   self:StopMovingOrSizing(); FGC_RecordFramePosition(self);</OnMouseUp>
+            <OnDragStop>  self:StopMovingOrSizing(); </OnDragStop>
+        </Scripts> 
+    </Frame>
+</Ui>
