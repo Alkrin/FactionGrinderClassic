@@ -86,14 +86,19 @@ function FGC_SetClassRepBonus(self,class,bonus)
     self.ClassRepBonuses[class] = bonus
 end
 
-function FGC_AddNPC(self,englishName,zone,xCoord,yCoord)
+function FGC_AddNPC(self,englishName,zone,xCoord,yCoord,index)
     local npc = {}
     npc.Name = englishName
     npc.Zone = zone
     npc.xCoord = xCoord
     npc.yCoord = yCoord
 
-    self.NPCs[englishName] = npc
+    if (index == nil) then
+        self.NPCs[englishName] = npc
+    else
+        if (self.NPCs[englishName] == nil) then self.NPCs[englishName] = {} end
+        self.NPCs[englishName][index] = npc
+    end
 
     --Add the NPC name to our localization table.
     self.Text:Add(englishName)
@@ -181,8 +186,12 @@ function FGC_AddRepRequirement(self,factionTag,minRepLevel,maxRepLevel,minExact,
     self.RepRequirements[factionTag] = req
 end
 
-function FGC_AddQuestAccepter(self,englishName)
-    table.insert(self.QuestAccepters,FGC_CurrentFaction.NPCs[englishName])
+function FGC_AddQuestAccepter(self,englishName,index)
+    if (index == nil) then
+        table.insert(self.QuestAccepters,FGC_CurrentFaction.NPCs[englishName])
+    else
+        table.insert(self.QuestAccepters,FGC_CurrentFaction.NPCs[englishName][index])
+    end
 end
 
 function FGC_AddExtraInfo(self,text)

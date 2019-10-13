@@ -16,7 +16,7 @@ faction:SetIcon("Interface\\Icons\\INV_BannerPVP_02")
 
 
 --Quest NPCs
---  faction:AddNPC(englishName,englishZone,xCoord,yCoord)
+--  faction:AddNPC(englishName,englishZone,xCoord,yCoord,index) - index is optional and should only be used if you have multiple NPCs with the same englishName
 faction:AddNPC("Bombardier Petrov","Howling Fjord",28,41)
 faction:AddNPC("Scout Captain Carter","Grizzly Hills",29,59)
 faction:AddNPC("Rheanna","Grizzly Hills",40,41)
@@ -34,7 +34,8 @@ faction:AddNPC("Frazzle Geargrinder","Icecrown",56,62)
 --  quest:AddAlternateName(name) - for multiple identical quests with different names (see ShatteredSunOffensive)
 --  quest:SetIcon(iconPath)
 --  quest:AddRepRequirement(factionTag,minLevel,maxLevel,minExact,maxExact) - levels are 1-8, exact values are -42000 to 42000
---  quest:AddQuestAccepter(englishName) - must be an NPC set up in the Quest NPCs section above.
+--  quest:AddQuestAccepter(englishName,index) - must be an NPC set up in the Quest NPCs section above
+--                                              index is optional and should only be used if you have multiple NPCs with the same englishName
 --  quest:AddGoldObjective(amount) - amount is in copper
 --  quest:AddItemObjective(englishName,itemID,count,shareable) - shareable means you can trade it between your alts
 --  quest:AddOtherObjective(objectiveIndex,text,count) - objectiveIndex is 1-based index of this quest objective in the quest log
