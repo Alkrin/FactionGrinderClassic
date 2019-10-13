@@ -14,7 +14,7 @@ local faction = FGC_CreateFaction("Everlook", --UniqueTag (no whitespace)
 faction:SetIcon("Interface\\Icons\\INV_Misc_Bomb_02")
 
 --Quest NPCs
---  faction:AddNPC(englishName,englishZone,xCoord,yCoord)
+--  faction:AddNPC(englishName,englishZone,xCoord,yCoord,index) - index is optional and should only be used if you have multiple NPCs with the same englishName
 faction:AddNPC("Bloodsail Traitor","Stranglethorn Vale",31,70)
 faction:AddNPC("Bronn Fitzwrench","Winterspring",59,39)
 faction:AddNPC("Rumsen Fizzlebrack","Tanaris",50,26)
@@ -29,7 +29,8 @@ faction:AddNPC("Knot Thimblejack","Dire Maul North","??","??")
 --  quest:AddAlternateName(name) - for multiple identical quests with different names (see ShatteredSunOffensive)
 --  quest:SetIcon(iconPath)
 --  quest:AddRepRequirement(factionTag,minLevel,maxLevel,minExact,maxExact) - levels are 1-8, exact values are -42000 to 42000
---  quest:AddQuestAccepter(englishName) - must be an NPC set up in the Quest NPCs section above.
+--  quest:AddQuestAccepter(englishName,index) - must be an NPC set up in the Quest NPCs section above
+--                                              index is optional and should only be used if you have multiple NPCs with the same englishName
 --  quest:AddGoldObjective(amount) - amount is in copper
 --  quest:AddItemObjective(englishName,itemID,count,shareable) - shareable means you can trade it between your alts
 --  quest:AddOtherObjective(objectiveIndex,text,count) - objectiveIndex is 1-based index of this quest objective in the quest log
