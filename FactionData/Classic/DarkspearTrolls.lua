@@ -36,7 +36,7 @@ faction:AddNPC("Vehena","Orgrimmar",37,87)
 --  quest:AddExtraInfo(text) - generic text string that will get displayed on this quest's tooltip
 local quest
 
-quest = faction:AddQuest("Runecloth","A Donation of Runecloth",75,50,true)
+quest = faction:AddQuest("Runecloth","A Donation of Runecloth",50,50,true)
 quest:SetIcon("Interface\\Icons\\INV_Fabric_PurpleFire_01")
 quest:AddItemObjective("Runecloth",14047,20,true)
 quest:AddQuestAccepter("Vehena")

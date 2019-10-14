@@ -56,7 +56,7 @@ quest:AddItemObjective("Morrowgrain",11040,10,true)
 quest:AddExtraInfo("Quintis accepts 5 Morrowgrain, but grants only 1/3 the rep")
 
 
-quest = faction:AddQuest("Runecloth","A Donation of Runecloth",75,50,true)
+quest = faction:AddQuest("Runecloth","A Donation of Runecloth",50,50,true)
 quest:SetIcon("Interface\\Icons\\INV_Fabric_PurpleFire_01")
 quest:AddQuestAccepter("Raedon Duskstriker")
 quest:AddItemObjective("Runecloth",14047,20,true)

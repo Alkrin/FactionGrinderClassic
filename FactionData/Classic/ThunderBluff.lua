@@ -53,7 +53,7 @@ quest:AddQuestAccepter("Bashana Runetotem")
 quest:AddItemObjective("Morrowgrain",11040,10,true)
 
 
-quest = faction:AddQuest("Runecloth","A Donation of Runecloth",75,50,true)
+quest = faction:AddQuest("Runecloth","A Donation of Runecloth",50,50,true)
 quest:SetIcon("Interface\\Icons\\INV_Fabric_PurpleFire_01")
 quest:AddQuestAccepter("Rumstag Proudstrider")
 quest:AddItemObjective("Runecloth",14047,20,true)
