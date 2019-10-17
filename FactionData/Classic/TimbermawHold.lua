@@ -40,7 +40,7 @@ faction:AddNPC("Salfa","Winterspring",28,35)
 --  quest:AddExtraInfo(text) - generic text string that will get displayed on this quest's tooltip
 local quest
 
-quest = faction:AddQuest("DeadwoodHeaddressFeathers","Feathers for Grazle",300,50,true)
+quest = faction:AddQuest("DeadwoodHeaddressFeathers","Feathers for Grazle",50,50,true)
 quest:AddAlternateName("Feathers for Nafien")
 quest:SetIcon("Interface\\Icons\\INV_Feather_13")
 quest:AddQuestAccepter("Grazle")
@@ -48,7 +48,7 @@ quest:AddQuestAccepter("Nafien")
 quest:AddItemObjective("Deadwood Headdress Feather",21377,5,false)
 
 
-quest = faction:AddQuest("WinterfallSpiritBeads","Beads for Salfa",300,50,true)
+quest = faction:AddQuest("WinterfallSpiritBeads","Beads for Salfa",50,50,true)
 quest:SetIcon("Interface\\Icons\\INV_Jewelry_Amulet_05")
 quest:AddQuestAccepter("Salfa")
 quest:AddItemObjective("Winterfall Spirit Beads",21383,5,false)
