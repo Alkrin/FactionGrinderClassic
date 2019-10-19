@@ -221,6 +221,16 @@ Localizations\ruRU\Undercity.lua
 Localizations\zhCN\Undercity.lua
 Localizations\zhTW\Undercity.lua
 
+FactionData\Classic\WintersaberTrainers.lua
+Localizations\deDE\WintersaberTrainers.lua
+Localizations\esES\WintersaberTrainers.lua
+Localizations\esMX\WintersaberTrainers.lua
+Localizations\frFR\WintersaberTrainers.lua
+Localizations\koKR\WintersaberTrainers.lua
+Localizations\ruRU\WintersaberTrainers.lua
+Localizations\zhCN\WintersaberTrainers.lua
+Localizations\zhTW\WintersaberTrainers.lua
+
 FactionData\BurningCrusade\Aldor.lua
 Localizations\deDE\Aldor.lua
 Localizations\esES\Aldor.lua
