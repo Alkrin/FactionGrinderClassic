@@ -354,12 +354,12 @@ function FGC_DisplaySelectedCategories()
 
         win = _G["FGC_"..faction.."GrindStatsTrackerCheckbox"]
         win:SetPoint("TOPLEFT",70,top+3)
-        win:SetChecked(FGCSettings["GrindStatsTrackersShown"][faction])
+        win:SetChecked(FGCSettings["GrindStatsTrackersShown"][faction] == 1)
         win:Show()
 
         if (FGC_tablesize(FGC_FactionData[faction].Quests) > 0) then
             win = _G["FGC_"..faction.."TurnInTrackerCheckbox"]
-            win:SetChecked(FGCSettings["TurnInTrackersShown"][faction])
+            win:SetChecked(FGCSettings["TurnInTrackersShown"][faction] == 1)
             win:SetPoint("TOPLEFT",25,top+3)
             win:Show()
         end
@@ -403,6 +403,7 @@ function FGC_OnGrindStatsTrackerCheckButtonClicked(faction,checked)
 end
 
 function FGC_OnTurnInTrackerCheckButtonClicked(faction,checked)
+if (checked) then D(faction.." CHECKED") else D(faction.." UNCHECKED") end
     if (checked) then
         FGCSettings["TurnInTrackersShown"][faction] = 1
     else
