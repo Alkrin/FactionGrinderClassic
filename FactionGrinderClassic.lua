@@ -403,7 +403,6 @@ function FGC_OnGrindStatsTrackerCheckButtonClicked(faction,checked)
 end
 
 function FGC_OnTurnInTrackerCheckButtonClicked(faction,checked)
-if (checked) then D(faction.." CHECKED") else D(faction.." UNCHECKED") end
     if (checked) then
         FGCSettings["TurnInTrackersShown"][faction] = 1
     else
